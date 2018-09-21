@@ -999,14 +999,15 @@ class Superset(BaseSupersetView):
 
         update_time_range(form_data)
 
-        drillable_columns = {}
-        datasource_id, datasource_type = self.datasource_info(None, None, form_data)
-        ds = db.session.query(SqlaTable).filter_by(id=datasource_id).first()
-        for column in ds.columns:
-            print("column.drillable is " + str(column.drillable))
-            if column.drillable:
-                drillable_columns[column.column_name] = str(column.drillable)
-        form_data['drillable_columns'] = drillable_columns
+        if form_data and form_data.__len__() > 0:
+            drillable_columns = {}
+            datasource_id, datasource_type = self.datasource_info(None, None, form_data)
+            ds = db.session.query(SqlaTable).filter_by(id=datasource_id).first()
+            for column in ds.columns:
+                print("column.drillable is " + str(column.drillable))
+                if column.drillable:
+                    drillable_columns[column.column_name] = str(column.drillable)
+            form_data['drillable_columns'] = drillable_columns
 
         return form_data, slc
 
