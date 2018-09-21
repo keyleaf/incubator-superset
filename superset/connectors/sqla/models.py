@@ -841,6 +841,7 @@ class SqlaTable(Model, BaseDatasource):
                 dbcol.is_dttm = dbcol.is_time
             else:
                 dbcol.type = datatype
+            dbcol.verbose_name = col.comment
             self.columns.append(dbcol)
             if not any_date_col and dbcol.is_time:
                 any_date_col = col.name
