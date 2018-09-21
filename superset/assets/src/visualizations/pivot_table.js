@@ -31,6 +31,8 @@ function PivotTable(element, props) {
     height,
     columnFormats,
     groupBy,
+    query,
+    formData,
     numberFormat,
     verboseMap,
   } = props;
@@ -90,6 +92,68 @@ function PivotTable(element, props) {
     container.style.overflow = 'auto';
     container.style.height = `${height + 10}px`;
   }
+
+  $('.chart-container  tbody').find('td').on('click',function() {
+
+      // var data = table.row(this).data();
+      // console.log(table.toString());
+
+      alert("this.textContent is " + this.textContent);
+      let prevs = $(this).prevAll();
+      let groupByValues = [];
+      prevs.each((n) => {
+        let prev = prevs[n];
+        if (prev.nodeName === "TH") {
+            groupByValues.push(prev.textContent);
+            return false;
+        }
+      });
+      alert("groupBy is " + groupBy);
+      alert("groupByValues is " + groupByValues);
+      alert("columns is " + columns);
+      alert("query is " + query);
+
+      // 保护原有数据不被改动
+      let formDataStr = JSON.stringify(formData)
+      let cloneFormData = JSON.parse(formDataStr);
+      alert(formDataStr);
+
+      let theLastGroupBy = cloneFormData.groupby[cloneFormData.groupby.length - 1];
+      let theNextGroupBy = cloneFormData.drillable_columns[theLastGroupBy];
+      if (theNextGroupBy) {
+
+      // }
+      //
+      // if (cloneFormData.groupby.indexOf("id") < 0) {
+      //     cloneFormData.groupby.push("id");
+
+          cloneFormData.groupby.push(theNextGroupBy);
+          if (groupByValues.length > 0) {
+              let filter = {
+                  "expressionType": "SIMPLE",
+                  "subject": theLastGroupBy,
+                  "operator": "==",
+                  "comparator": groupByValues[0],
+                  "clause": "WHERE",
+                  "sqlExpression": null,
+                  "fromFormData": true,
+                  "filterOptionName": `filter_${Math.random().toString(36).substring(2, 15)}_${Math.random().toString(36).substring(2, 15)}`
+              };
+              cloneFormData.adhoc_filters.push(filter);
+          }
+
+          // Jquery编码：
+          let formDataEncode = encodeURIComponent(JSON.stringify(cloneFormData));
+
+          // let drillUrl = "http://localhost:9000/superset/explore/?form_data=" + formDataEncode;
+          let drillUrl = document.location.protocol + "//" + document.location.host + document.location.pathname + "?form_data=" + formDataEncode;
+          debugger;
+          window.open(drillUrl);
+
+      } else {
+        alert("无法继续下钻");
+      }
+  });
 }
 
 function adaptor(slice, payload) {
@@ -98,6 +162,8 @@ function adaptor(slice, payload) {
     groupby: groupBy,
     number_format: numberFormat,
   } = formData;
+  // 获取下钻字段
+  formData.drillable_columns = payload.form_data.drillable_columns;
   const {
     column_formats: columnFormats,
     verbose_map: verboseMap,
@@ -107,10 +173,12 @@ function adaptor(slice, payload) {
   return PivotTable(element, {
     data: payload.data,
     height: slice.height(),
+    query: payload.query,
     columnFormats,
     groupBy,
     numberFormat,
     verboseMap,
+    formData,
   });
 }
 

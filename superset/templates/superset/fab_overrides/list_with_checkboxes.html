@@ -41,6 +41,35 @@
         </thead>
     {% endblock %}
 
+    {% set column_list = value_columns.gi_frame.f_locals['lst'] if value_columns.gi_frame %}
+    {% macro select(drillValue, pk, value) %}
+        <select
+                name="{{ '{}__{}'.format(pk, value) }}"
+                id="{{ '{}__{}'.format(pk, value) }}"
+
+                {% if drillValue %}
+                style="background: chartreuse"
+                {% endif %}
+
+                data-select-api-prefix="/superset/select/{{ modelview_name }}/{{ pk }}/{{ value }}/">
+            {% if drillValue %}
+                <option value="NULL">NULL</option>
+            {% else %}
+                <option selected="selected" value="NULL">NULL</option>
+            {% endif %}
+
+            {% for column_item in column_list %}
+                {% if column_item['column_name'] == drillValue %}
+                    <option selected="selected" value="{{ column_item['column_name'] }}">{{ column_item['column_name'] }}</option>
+                {% else %}
+                    <option value="{{ column_item['column_name'] }}">{{ column_item['column_name'] }}</option>
+                {% endif %}
+            {% endfor %}
+        </select>
+    {% endmacro %}
+
+
+
     {% block begin_loop_values %}
         {% for item in value_columns %}
             {% set pk = pks[loop.index-1] %}
@@ -65,6 +94,8 @@
                           name="{{ '{}__{}'.format(pk, value) }}"
                           id="{{ '{}__{}'.format(pk, value) }}"
                           data-checkbox-api-prefix="/superset/checkbox/{{ modelview_name }}/{{ pk }}/{{ value }}/">
+                    {% elif value == 'drillable' %}
+                        {{ select(item[value], pk, value) }}
                     {% else %}
                       {{ item[value] }}
                     {% endif %}

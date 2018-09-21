@@ -87,12 +87,13 @@ class TableColumn(Model, BaseColumn):
     expression = Column(Text, default='')
     python_date_format = Column(String(255))
     database_expression = Column(String(255))
+    drillable = Column(String(32))
 
     export_fields = (
         'table_id', 'column_name', 'verbose_name', 'is_dttm', 'is_active',
         'type', 'groupby', 'count_distinct', 'sum', 'avg', 'max', 'min',
         'filterable', 'expression', 'description', 'python_date_format',
-        'database_expression',
+        'database_expression', 'drillable'
     )
 
     update_from_object_fields = [

@@ -129,6 +129,16 @@ export function toggleCheckbox(apiUrlPrefix, selector) {
   });
 }
 
+export function toggleSelect(apiUrlPrefix, selector) {
+    const apiUrl = apiUrlPrefix + $(selector)[0].value;
+    $.get(apiUrl).fail(function (xhr) {
+        const resp = xhr.responseJSON;
+        if (resp && resp.message) {
+            showApiMessage(resp);
+        }
+    });
+}
+
 /**
  * Fix the height of the table body of a DataTable with scrollY set
  */

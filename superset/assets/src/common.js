@@ -18,7 +18,14 @@ $(document).ready(function () {
     utils.toggleCheckbox(prefix, '#' + id);
   });
 
-  // for language picker dropdown
+  $('select[data-select-api-prefix]').change(function () {
+      const $this = $(this);
+      const prefix = $this.data('select-api-prefix');
+      const id = $this.attr('id');
+      utils.toggleSelect(prefix, '#' + id);
+  });
+
+    // for language picker dropdown
   $('#language-picker a').click(function (ev) {
     ev.preventDefault();
 
