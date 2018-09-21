@@ -96,9 +96,7 @@ function PivotTable(element, props) {
   $('.chart-container  tbody').find('td').on('click',function() {
 
       // var data = table.row(this).data();
-      // console.log(table.toString());
-
-      alert("this.textContent is " + this.textContent);
+      // alert("this.textContent is " + this.textContent);
       let prevs = $(this).prevAll();
       let groupByValues = [];
       prevs.each((n) => {
@@ -108,25 +106,19 @@ function PivotTable(element, props) {
             return false;
         }
       });
-      alert("groupBy is " + groupBy);
-      alert("groupByValues is " + groupByValues);
-      alert("columns is " + columns);
-      alert("query is " + query);
+      // alert("groupBy is " + groupBy);
+      // alert("groupByValues is " + groupByValues);
+      // alert("columns is " + columns);
+      // alert("query is " + query);
 
       // 保护原有数据不被改动
       let formDataStr = JSON.stringify(formData)
       let cloneFormData = JSON.parse(formDataStr);
-      alert(formDataStr);
+      // alert(formDataStr);
 
       let theLastGroupBy = cloneFormData.groupby[cloneFormData.groupby.length - 1];
       let theNextGroupBy = cloneFormData.drillable_columns[theLastGroupBy];
       if (theNextGroupBy) {
-
-      // }
-      //
-      // if (cloneFormData.groupby.indexOf("id") < 0) {
-      //     cloneFormData.groupby.push("id");
-
           cloneFormData.groupby.push(theNextGroupBy);
           if (groupByValues.length > 0) {
               let filter = {
@@ -145,9 +137,7 @@ function PivotTable(element, props) {
           // Jquery编码：
           let formDataEncode = encodeURIComponent(JSON.stringify(cloneFormData));
 
-          // let drillUrl = "http://localhost:9000/superset/explore/?form_data=" + formDataEncode;
           let drillUrl = document.location.protocol + "//" + document.location.host + document.location.pathname + "?form_data=" + formDataEncode;
-          debugger;
           window.open(drillUrl);
 
       } else {
