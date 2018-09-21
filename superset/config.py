@@ -59,8 +59,9 @@ SQLALCHEMY_TRACK_MODIFICATIONS = False
 SECRET_KEY = '\2\1thisismyscretkey\1\2\e\y\y\h'  # noqa
 
 # The SQLAlchemy connection string.
-SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(DATA_DIR, 'superset-mam.db')
+# SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(DATA_DIR, 'superset-mam.db')
 # SQLALCHEMY_DATABASE_URI = 'mysql://myapp@localhost/myapp'
+SQLALCHEMY_DATABASE_URI = 'mysql://operator:jndz2017@121.43.39.85:3306/superset'
 # SQLALCHEMY_DATABASE_URI = 'postgresql://root:password@localhost/myapp'
 
 # In order to hook up a custom password store for all SQLACHEMY connections
@@ -82,7 +83,7 @@ WTF_CSRF_ENABLED = True
 WTF_CSRF_EXEMPT_LIST = []
 
 # Whether to run the web server in debug mode or not
-DEBUG = False
+DEBUG = True
 FLASK_USE_RELOAD = True
 
 # Whether to show the stacktrace on 500 error
