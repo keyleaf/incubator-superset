@@ -59,6 +59,14 @@ from .base import (
 )
 from .utils import bootstrap_user_data
 
+
+# SQL_LAB查询时中文报错
+# UnicodeEncodeError: ‘ascii’ codec can’t encode characters in position xxx ordinal not in range
+import sys
+
+reload(sys)
+sys.setdefaultencoding('utf-8')
+
 config = app.config
 stats_logger = config.get('STATS_LOGGER')
 log_this = models.Log.log_this
@@ -991,6 +999,15 @@ class Superset(BaseSupersetView):
 
         update_time_range(form_data)
 
+        drillable_columns = {}
+        datasource_id, datasource_type = self.datasource_info(None, None, form_data)
+        ds = db.session.query(SqlaTable).filter_by(id=datasource_id).first()
+        for column in ds.columns:
+            print("column.drillable is " + str(column.drillable))
+            if column.drillable:
+                drillable_columns[column.column_name] = str(column.drillable)
+        form_data['drillable_columns'] = drillable_columns
+
         return form_data, slc
 
     def get_viz(
@@ -1467,6 +1484,24 @@ class Superset(BaseSupersetView):
             if checked:
                 metrics = col.get_metrics().values()
                 col.datasource.add_missing_metrics(metrics)
+            db.session.commit()
+        return json_success('OK')
+
+    @api
+    @has_access_api
+    @expose('/select/<model_view>/<id_>/<attr>/<value>', methods=['GET'])
+    def select(self, model_view, id_, attr, value):
+        """endpoint for checking/unchecking any boolean in a sqla model"""
+        modelview_to_model = {
+            '{}ColumnInlineView'.format(name.capitalize()): source.column_class
+            for name, source in ConnectorRegistry.sources.items()
+        }
+        model = modelview_to_model[model_view]
+        col = db.session.query(model).filter_by(id=id_).first()
+        if value and value == "NULL":
+            value = None
+        if col:
+            setattr(col, attr, value)
             db.session.commit()
         return json_success('OK')
 
@@ -2655,8 +2690,8 @@ class Superset(BaseSupersetView):
         query_limit = config.get('QUERY_SEARCH_LIMIT', 1000)
         sql_queries = (
             query.order_by(Query.start_time.asc())
-            .limit(query_limit)
-            .all()
+                .limit(query_limit)
+                .all()
         )
 
         dict_queries = [q.to_dict() for q in sql_queries]
@@ -2681,9 +2716,9 @@ class Superset(BaseSupersetView):
 
         welcome_dashboard_id = (
             db.session
-            .query(UserAttribute.welcome_dashboard_id)
-            .filter_by(user_id=g.user.get_id())
-            .scalar()
+                .query(UserAttribute.welcome_dashboard_id)
+                .filter_by(user_id=g.user.get_id())
+                .scalar()
         )
         if welcome_dashboard_id:
             return self.dashboard(str(welcome_dashboard_id))
@@ -2783,7 +2818,6 @@ appbuilder.add_view(
     category_label=__('Manage'),
     category_icon='')
 
-
 appbuilder.add_view_no_menu(CssTemplateAsyncModelView)
 
 appbuilder.add_link(
@@ -2844,6 +2878,5 @@ def panoramix(url):  # noqa
 @app.route('/<regex("caravel\/.*"):url>')
 def caravel(url):  # noqa
     return redirect(request.full_path.replace('caravel', 'superset'))
-
 
 # ---------------------------------------------------------------------
