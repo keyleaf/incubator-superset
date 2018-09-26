@@ -4974,6 +4974,9 @@ msgstr "改变为"
 msgid "Saved Queries"
 msgstr "已保存查询"
 
+msgid "Can't drill."
+msgstr "不能下钻。"
+
 #~ msgid "Please choose at least one \"Group by\" field"
 #~ msgstr "请至少选择一个“分组”字段"
 

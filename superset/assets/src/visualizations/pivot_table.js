@@ -4,6 +4,8 @@ import $ from 'jquery';
 import PropTypes from 'prop-types';
 import { d3format, fixDataTableBodyHeight } from '../modules/utils';
 import './pivot_table.css';
+import {t} from "../locales";
+
 
 dt(window, $);
 
@@ -141,7 +143,7 @@ function PivotTable(element, props) {
           window.open(drillUrl);
 
       } else {
-        alert("无法继续下钻");
+        alert(t("Can't drill."));
       }
   });
 }
