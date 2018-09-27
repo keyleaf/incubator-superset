@@ -144,7 +144,7 @@ function drill(vizType, formData, data) {
         // Jquery编码：
         let formDataEncode = encodeURIComponent(JSON.stringify(cloneFormData));
 
-        let drillUrl = document.location.protocol + "//" + document.location.host + document.location.pathname + "?form_data=" + formDataEncode;
+        let drillUrl = document.location.protocol + "//" + document.location.host + "/superset/explore/" + "?form_data=" + formDataEncode;
         window.open(drillUrl);
 
     } else {
