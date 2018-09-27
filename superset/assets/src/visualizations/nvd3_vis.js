@@ -109,6 +109,49 @@ function getMaxLabelSize(container, axisClass) {
   return Math.ceil(Math.max(...labelDimensions));
 }
 
+function drill(vizType, formData, data) {
+    let groupByValues = [];
+    if (data.x) {
+        groupByValues = data.x.split(",");
+    }
+
+    // 保护原有数据不被改动
+    let formDataStr = JSON.stringify(formData);
+    let cloneFormData = JSON.parse(formDataStr);
+
+    let theLastGroupBy = cloneFormData.groupby[cloneFormData.groupby.length - 1];
+    let theNextGroupBy = cloneFormData.drillable_columns[theLastGroupBy];
+    if (theNextGroupBy) {
+        if (vizType == "pie") {
+            cloneFormData.groupby = [theNextGroupBy];
+        } else {
+            cloneFormData.groupby.push(theNextGroupBy);
+        }
+        if (groupByValues.length > 0) {
+            let filter = {
+                "expressionType": "SIMPLE",
+                "subject": theLastGroupBy,
+                "operator": "==",
+                "comparator": groupByValues[groupByValues.length - 1],
+                "clause": "WHERE",
+                "sqlExpression": null,
+                "fromFormData": true,
+                "filterOptionName": `filter_${Math.random().toString(36).substring(2, 15)}_${Math.random().toString(36).substring(2, 15)}`
+            };
+            cloneFormData.adhoc_filters.push(filter);
+        }
+
+        // Jquery编码：
+        let formDataEncode = encodeURIComponent(JSON.stringify(cloneFormData));
+
+        let drillUrl = document.location.protocol + "//" + document.location.host + document.location.pathname + "?form_data=" + formDataEncode;
+        window.open(drillUrl);
+
+    } else {
+        alert(t("Can't drill."));
+    }
+}
+
 export function formatLabel(input, verboseMap = {}) {
   // The input for label may be a string or an array of string
   // When using the time shift feature, the label contains a '---' in the array
@@ -124,6 +167,9 @@ export function formatLabel(input, verboseMap = {}) {
 }
 
 export default function nvd3Vis(slice, payload) {
+  // 获取下钻字段
+    slice.formData.drillable_columns = payload.form_data.drillable_columns;
+
   let chart;
   let colorKey = 'key';
   const isExplore = $('#explore-container').length === 1;
@@ -525,6 +571,18 @@ export default function nvd3Vis(slice, payload) {
     .attr('height', height)
     .attr('width', width)
     .call(chart);
+
+    if (vizType == 'dist_bar') {
+        // dist_bar 柱状图
+        d3.selectAll('.nv-bar.positive').on('click.drill', function (d, i, j) {
+            drill(vizType, fd, d);
+        });
+    } else if (vizType == 'pie') {
+        // pie 饼图
+        d3.selectAll('.nv-slice').on('click.drill', function (d, i, j) {
+            drill(vizType, fd, d.data);
+        });
+    }
 
     // align yAxis1 and yAxis2 ticks
     if (['dual_line', 'line_multi'].indexOf(vizType) >= 0) {

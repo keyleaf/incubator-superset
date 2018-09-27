@@ -114,7 +114,7 @@ function PivotTable(element, props) {
       // alert("query is " + query);
 
       // 保护原有数据不被改动
-      let formDataStr = JSON.stringify(formData)
+      let formDataStr = JSON.stringify(formData);
       let cloneFormData = JSON.parse(formDataStr);
       // alert(formDataStr);
 

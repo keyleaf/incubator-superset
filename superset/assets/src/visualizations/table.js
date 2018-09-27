@@ -6,6 +6,7 @@ import 'datatables.net-bs/css/dataTables.bootstrap.css';
 import dompurify from 'dompurify';
 import { fixDataTableBodyHeight, d3TimeFormatPreset } from '../modules/utils';
 import './table.css';
+import { t } from '../locales';
 
 dt(window, $);
 
@@ -189,6 +190,8 @@ function TableVis(element, props) {
           d3.select(this).classed('filtered', true);
           onAddFilter(d.col, [d.val]);
         }
+      } else if (!d.isMetric && d.col && d.val) {
+        drill(props.formData, d)
       }
     })
     .style('cursor', d => (!d.isMetric) ? 'pointer' : '')
@@ -236,6 +239,8 @@ TableVis.propTypes = propTypes;
 
 function adaptor(slice, payload) {
   const { selector, formData, datasource } = slice;
+  // 获取下钻字段
+  formData.drillable_columns = payload.form_data.drillable_columns;
   const {
     align_pn: alignPositiveNegative,
     color_pn: colorPositiveNegative,
@@ -291,7 +296,47 @@ function adaptor(slice, payload) {
     tableFilter,
     tableTimestampFormat,
     timeseriesLimitMetric,
+    formData,
   });
+}
+
+function drill(formData, data) {
+    let groupByValues = [];
+    if (data) {
+        groupByValues.push(data.val);
+    }
+
+    // 保护原有数据不被改动
+    let formDataStr = JSON.stringify(formData);
+    let cloneFormData = JSON.parse(formDataStr);
+
+    let theLastGroupBy = data.col;
+    let theNextGroupBy = cloneFormData.drillable_columns[theLastGroupBy];
+    if (theNextGroupBy) {
+        cloneFormData.groupby = [theNextGroupBy];
+        if (groupByValues.length > 0) {
+            let filter = {
+                "expressionType": "SIMPLE",
+                "subject": theLastGroupBy,
+                "operator": "==",
+                "comparator": groupByValues[groupByValues.length - 1],
+                "clause": "WHERE",
+                "sqlExpression": null,
+                "fromFormData": true,
+                "filterOptionName": `filter_${Math.random().toString(36).substring(2, 15)}_${Math.random().toString(36).substring(2, 15)}`
+            };
+            cloneFormData.adhoc_filters.push(filter);
+        }
+
+        // Jquery编码：
+        let formDataEncode = encodeURIComponent(JSON.stringify(cloneFormData));
+
+        let drillUrl = document.location.protocol + "//" + document.location.host + document.location.pathname + "?form_data=" + formDataEncode;
+        window.open(drillUrl);
+
+    } else {
+        alert(t("Can't drill."));
+    }
 }
 
 export default adaptor;
