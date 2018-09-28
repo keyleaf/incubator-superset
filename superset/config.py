@@ -61,7 +61,10 @@ SECRET_KEY = '\2\1thisismyscretkey\1\2\e\y\y\h'  # noqa
 # The SQLAlchemy connection string.
 # SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(DATA_DIR, 'superset-mam.db')
 # SQLALCHEMY_DATABASE_URI = 'mysql://myapp@localhost/myapp'
-SQLALCHEMY_DATABASE_URI = 'mysql://operator:jndz2017@121.43.39.85:3306/superset'
+# test
+# SQLALCHEMY_DATABASE_URI = 'mysql://operator:jndz2017@121.43.39.85:3306/superset'
+# pro
+SQLALCHEMY_DATABASE_URI = 'mysql://operator:jndz2017@10.81.180.119:3306/superset'
 # SQLALCHEMY_DATABASE_URI = 'postgresql://root:password@localhost/myapp'
 
 # In order to hook up a custom password store for all SQLACHEMY connections
