@@ -7,6 +7,7 @@ from __future__ import print_function
 from __future__ import unicode_literals
 
 import logging
+from superset.security_ex.security_views import MyAuthRemoteUserView
 
 from flask import g
 from flask_appbuilder.security.sqla import models as ab_models
@@ -80,6 +81,8 @@ OBJECT_SPEC_PERMISSIONS = set([
 
 
 class SupersetSecurityManager(SecurityManager):
+
+    authremoteuserview=MyAuthRemoteUserView
 
     def get_schema_perm(self, database, schema):
         if schema:
