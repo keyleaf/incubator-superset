@@ -1,5 +1,5 @@
 import shortid from 'shortid';
-import { t } from '../locales';
+import { t } from '@superset-ui/translation';
 import getToastsFromPyFlashMessages from '../messageToasts/utils/getToastsFromPyFlashMessages';
 
 export default function getInitialState({ defaultDbId, ...restBootstrapData }) {
@@ -15,14 +15,15 @@ export default function getInitialState({ defaultDbId, ...restBootstrapData }) {
 
   return {
     sqlLab: {
+      activeSouthPaneTab: 'Results',
       alerts: [],
-      queries: {},
       databases: {},
+      offline: false,
+      queries: {},
       queryEditors: [defaultQueryEditor],
       tabHistory: [defaultQueryEditor.id],
       tables: [],
-      queriesLastUpdate: 0,
-      activeSouthPaneTab: 'Results',
+      queriesLastUpdate: Date.now(),
       ...restBootstrapData,
     },
     messageToasts: getToastsFromPyFlashMessages(

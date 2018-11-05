@@ -2,13 +2,13 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Alert, Button, ButtonGroup, ProgressBar } from 'react-bootstrap';
 import shortid from 'shortid';
+import { t } from '@superset-ui/translation';
 
 import Loading from '../../components/Loading';
 import ExploreResultsButton from './ExploreResultsButton';
 import HighlightedSql from './HighlightedSql';
 import FilterableTable from '../../components/FilterableTable/FilterableTable';
 import QueryStateLabel from './QueryStateLabel';
-import { t } from '../../locales';
 
 const propTypes = {
   actions: PropTypes.object,
@@ -200,7 +200,7 @@ export default class ResultSet extends React.PureComponent {
     }
     let progressBar;
     let trackingUrl;
-    if (query.progress > 0 && query.state === 'running') {
+    if (query.progress > 0) {
       progressBar = (
         <ProgressBar
           striped
