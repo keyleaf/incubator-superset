@@ -59,12 +59,6 @@ import sys
 reload(sys)
 sys.setdefaultencoding('utf-8')
 
-# 上面写法在Python 3.x中不好使了 提示 name ‘reload’ is not defined
-# 在3.x中已经被毙掉了被替换为如下
-
-# import importlib
-# importlib.reload(sys)
-
 config = app.config
 stats_logger = config.get('STATS_LOGGER')
 log_this = models.Log.log_this
