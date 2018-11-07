@@ -1,8 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import VirtualizedSelect from 'react-virtualized-select';
+import { t } from '@superset-ui/translation';
+
 import ControlHeader from '../ControlHeader';
-import { t } from '../../../locales';
 import VirtualizedRendererWrap from '../../../components/VirtualizedRendererWrap';
 import OnPasteSelect from '../../../components/OnPasteSelect';
 import MetricDefinitionOption from '../MetricDefinitionOption';
@@ -27,11 +28,13 @@ const propTypes = {
   columns: PropTypes.arrayOf(columnType),
   savedMetrics: PropTypes.arrayOf(savedMetricType),
   multi: PropTypes.bool,
+  clearable: PropTypes.bool,
   datasourceType: PropTypes.string,
 };
 
 const defaultProps = {
   onChange: () => {},
+  clearable: true,
 };
 
 function isDictionaryForAdhocMetric(value) {
@@ -250,7 +253,7 @@ export default class MetricsControl extends React.PureComponent {
           value={this.props.multi ? this.state.value : this.state.value[0]}
           labelKey="label"
           valueKey="optionName"
-          clearable
+          clearable={this.props.clearable}
           closeOnSelect
           onChange={this.onChange}
           optionRenderer={this.optionRenderer}

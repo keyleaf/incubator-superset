@@ -1,7 +1,6 @@
 /* eslint camelcase: 0 */
-import d3 from 'd3';
 import $ from 'jquery';
-
+import d3 from 'd3';
 import { formatDate, UTC } from './dates';
 
 const siFormatter = d3.format('.3s');
@@ -107,38 +106,6 @@ export function showModal(options) {
   $(options.modalSelector).modal('show');
 }
 
-
-function showApiMessage(resp) {
-  const template =
-    '<div class="alert"> ' +
-    '<button type="button" class="close" ' +
-    'data-dismiss="alert">\xD7</button> </div>';
-  const severity = resp.severity || 'info';
-  $(template).addClass('alert-' + severity)
-             .append(resp.message)
-             .appendTo($('#alert-container'));
-}
-
-export function toggleCheckbox(apiUrlPrefix, selector) {
-  const apiUrl = apiUrlPrefix + $(selector)[0].checked;
-  $.get(apiUrl).fail(function (xhr) {
-    const resp = xhr.responseJSON;
-    if (resp && resp.message) {
-      showApiMessage(resp);
-    }
-  });
-}
-
-export function toggleSelect(apiUrlPrefix, selector) {
-    const apiUrl = apiUrlPrefix + $(selector)[0].value;
-    $.get(apiUrl).fail(function (xhr) {
-        const resp = xhr.responseJSON;
-        if (resp && resp.message) {
-            showApiMessage(resp);
-        }
-    });
-}
-
 /**
  * Fix the height of the table body of a DataTable with scrollY set
  */
@@ -165,20 +132,6 @@ export function d3format(format, number) {
   }
 }
 
-// Slice objects interact with their context through objects that implement
-// this controllerInterface (dashboard, explore, standalone)
-export const controllerInterface = {
-  type: null,
-  done: () => {},
-  error: () => {},
-  always: () => {},
-  addFiler: () => {},
-  setFilter: () => {},
-  getFilters: () => false,
-  removeFilter: () => {},
-  filters: {},
-};
-
 export function formatSelectOptionsForRange(start, end) {
   // outputs array of arrays
   // formatSelectOptionsForRange(1, 5)
@@ -196,73 +149,8 @@ export function formatSelectOptions(options) {
   );
 }
 
-export function slugify(string) {
-  // slugify('My Neat Label! '); returns 'my-neat-label'
-  return string
-          .toString()
-          .toLowerCase()
-          .trim()
-          .replace(/[\s\W-]+/g, '-') // replace spaces, non-word chars, w/ a single dash (-)
-          .replace(/-$/, ''); // remove last floating dash
-}
-
-export function getAjaxErrorMsg(error) {
-  const respJSON = error.responseJSON;
-  return (respJSON && respJSON.error) ? respJSON.error :
-          error.responseText;
-}
-
 export function getDatasourceParameter(datasourceId, datasourceType) {
   return `${datasourceId}__${datasourceType}`;
-}
-
-export function customizeToolTip(chart, xAxisFormatter, yAxisFormatters) {
-  chart.useInteractiveGuideline(true);
-  chart.interactiveLayer.tooltip.contentGenerator(function (d) {
-    const tooltipTitle = xAxisFormatter(d.value);
-    let tooltip = '';
-
-    tooltip += "<table><thead><tr><td colspan='3'>"
-      + `<strong class='x-value'>${tooltipTitle}</strong>`
-      + '</td></tr></thead><tbody>';
-
-    d.series.forEach((series, i) => {
-      const yAxisFormatter = yAxisFormatters[i];
-      const value = yAxisFormatter(series.value);
-      tooltip += "<tr><td class='legend-color-guide'>"
-        + `<div style="background-color: ${series.color};"></div></td>`
-        + `<td class='key'>${series.key}</td>`
-        + `<td class='value'>${value}</td></tr>`;
-    });
-
-    tooltip += '</tbody></table>';
-
-    return tooltip;
-  });
-}
-
-export function initJQueryAjax() {
-  // Works in conjunction with a Flask-WTF token as described here:
-  // http://flask-wtf.readthedocs.io/en/stable/csrf.html#javascript-requests
-  const token = $('input#csrf_token').val();
-  if (token) {
-    $.ajaxSetup({
-      beforeSend(xhr, settings) {
-        if (!/^(GET|HEAD|OPTIONS|TRACE)$/i.test(settings.type) && !this.crossDomain) {
-          xhr.setRequestHeader('X-CSRFToken', token);
-        }
-      },
-    });
-  }
-}
-
-export function tryNumify(s) {
-  // Attempts casting to Number, returns string when failing
-  const n = Number(s);
-  if (isNaN(n)) {
-    return s;
-  }
-  return n;
 }
 
 export function getParam(name) {

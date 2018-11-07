@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # pylint: disable=C,R,W
 """The main config file for Superset
 
@@ -6,11 +5,6 @@ All configuration in this file can be overridden by providing a superset_config
 in your PYTHONPATH as there is a ``from superset_config import *``
 at the end of this file.
 """
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
-from __future__ import unicode_literals
-
 from collections import OrderedDict
 import imp
 import json
@@ -63,9 +57,9 @@ SECRET_KEY = '\2\1thisismyscretkey\1\2\e\y\y\h'  # noqa
 # SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(DATA_DIR, 'superset-mam.db')
 # SQLALCHEMY_DATABASE_URI = 'mysql://myapp@localhost/myapp'
 # test
-# SQLALCHEMY_DATABASE_URI = 'mysql://operator:jndz2017@121.43.39.85:3306/superset'
+SQLALCHEMY_DATABASE_URI = 'mysql://operator:jndz2017@121.43.39.85:3306/superset'
 # pro
-SQLALCHEMY_DATABASE_URI = 'mysql://operator:jndz2017@10.81.180.119:3306/superset'
+# SQLALCHEMY_DATABASE_URI = 'mysql://operator:jndz2017@10.81.180.119:3306/superset'
 # SQLALCHEMY_DATABASE_URI = 'postgresql://root:password@localhost/myapp'
 
 # In order to hook up a custom password store for all SQLACHEMY connections
@@ -124,7 +118,7 @@ DRUID_ANALYSIS_TYPES = ['cardinality']
 # AUTH_DB : Is for database (username/password()
 # AUTH_LDAP : Is for LDAP
 # AUTH_REMOTE_USER : Is for using REMOTE_USER from web server
-AUTH_TYPE = AUTH_REMOTE_USER
+AUTH_TYPE = AUTH_DB
 
 # Uncomment to setup Full admin role name
 # AUTH_ROLE_ADMIN = 'Admin'
@@ -175,6 +169,14 @@ LANGUAGES = {
     'pt_BR': {'flag': 'br', 'name': 'Brazilian Portuguese'},
     'ru': {'flag': 'ru', 'name': 'Russian'},
 }
+
+# ---------------------------------------------------
+# Feature flags
+# ---------------------------------------------------
+# Feature flags that are on by default go here. Their
+# values can be overridden by those in super_config.py
+FEATURE_FLAGS = {}
+
 # ---------------------------------------------------
 # Image and file configuration
 # ---------------------------------------------------
@@ -280,8 +282,13 @@ BACKUP_COUNT = 30
 # Set this API key to enable Mapbox visualizations
 MAPBOX_API_KEY = os.environ.get('MAPBOX_API_KEY', '')
 
-# Maximum number of rows returned in the SQL editor
-SQL_MAX_ROW = 1000
+# Maximum number of rows returned from a database
+# in async mode, no more than SQL_MAX_ROW will be returned and stored
+# in the results backend. This also becomes the limit when exporting CSVs
+SQL_MAX_ROW = 100000
+
+# Limit to be returned to the frontend.
+DISPLAY_MAX_ROW = 1000
 
 # Maximum number of tables/views displayed in the dropdown window in SQL Lab.
 MAX_TABLE_NAMES = 3000
@@ -307,8 +314,6 @@ class CeleryConfig(object):
 CELERY_CONFIG = CeleryConfig
 """
 CELERY_CONFIG = None
-SQL_CELERY_DB_FILE_PATH = os.path.join(DATA_DIR, 'celerydb.sqlite')
-SQL_CELERY_RESULTS_DB_FILE_PATH = os.path.join(DATA_DIR, 'celery_results.sqlite')
 
 # static http headers to be served by your Superset server.
 # This header prevents iFrames from other domains and
