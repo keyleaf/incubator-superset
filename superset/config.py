@@ -12,8 +12,7 @@ import os
 import sys
 
 from dateutil import tz
-from flask_appbuilder.security.manager import AUTH_REMOTE_USER, AUTH_DB
-# from superset.security.security_models import MySecurityManager
+from flask_appbuilder.security.manager import AUTH_DB
 
 from superset.stats_logger import DummyStatsLogger
 
