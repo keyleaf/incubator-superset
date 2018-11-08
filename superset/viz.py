@@ -474,6 +474,26 @@ class BaseViz(object):
         include_index = not isinstance(df.index, pd.RangeIndex)
         return df.to_csv(index=include_index, **config.get('CSV_EXPORT'))
 
+    def get_xlsx(self):
+        df = self.get_df()
+        include_index = not isinstance(df.index, pd.RangeIndex)
+
+        from pandas.io.excel import ExcelWriter
+        from pandas import compat
+
+        filename = datetime.now().strftime('%Y%m%d_%H%M%S')
+        path = config.get('XLSX_EXPORT_PATH') + filename + '-' + uuid.uuid1().__str__() + '.xlsx'
+
+        if isinstance(path, compat.string_types):
+            writer = ExcelWriter(path)
+            # with ExcelWriter(path, engine='io.excel.xlsx.writer') as writer:
+        else:
+            writer = path
+
+        df.to_excel(excel_writer=writer, index=include_index, **config.get('CSV_EXPORT'))
+        writer.save()
+        return path, filename
+
     def get_data(self, df):
         return self.get_df().to_dict(orient='records')
 

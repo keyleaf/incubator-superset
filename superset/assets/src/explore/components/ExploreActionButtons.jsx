@@ -21,6 +21,7 @@ export default function ExploreActionButtons({
     'disabled disabledButton': !canDownload,
   });
   const doExportCSV = exportChart.bind(this, latestQueryFormData, 'csv');
+  const doExportXlsx = exportChart.bind(this, latestQueryFormData, 'xlsx');
   const doExportChart = exportChart.bind(this, latestQueryFormData, 'json');
 
   return (
@@ -55,6 +56,16 @@ export default function ExploreActionButtons({
           rel="noopener noreferrer"
         >
           <i className="fa fa-file-text-o" /> .csv
+        </a>}
+        {latestQueryFormData &&
+        <a
+            onClick={doExportXlsx}
+            className={exportToCSVClasses}
+            title={t('Export to .xlsx format')}
+            target="_blank"
+            rel="noopener noreferrer"
+        >
+            <i className="fa fa-file-text-o" /> .xlsx
         </a>}
       <DisplayQueryButton
         queryResponse={queryResponse}

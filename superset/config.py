@@ -63,9 +63,9 @@ SECRET_KEY = '\2\1thisismyscretkey\1\2\e\y\y\h'  # noqa
 # SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(DATA_DIR, 'superset-mam.db')
 # SQLALCHEMY_DATABASE_URI = 'mysql://myapp@localhost/myapp'
 # test
-# SQLALCHEMY_DATABASE_URI = 'mysql://operator:jndz2017@121.43.39.85:3306/superset'
+SQLALCHEMY_DATABASE_URI = 'mysql://operator:jndz2017@121.43.39.85:3306/superset'
 # pro
-SQLALCHEMY_DATABASE_URI = 'mysql://operator:jndz2017@10.81.180.119:3306/superset'
+# SQLALCHEMY_DATABASE_URI = 'mysql://operator:jndz2017@10.81.180.119:3306/superset'
 # SQLALCHEMY_DATABASE_URI = 'postgresql://root:password@localhost/myapp'
 
 # In order to hook up a custom password store for all SQLACHEMY connections
@@ -124,7 +124,7 @@ DRUID_ANALYSIS_TYPES = ['cardinality']
 # AUTH_DB : Is for database (username/password()
 # AUTH_LDAP : Is for LDAP
 # AUTH_REMOTE_USER : Is for using REMOTE_USER from web server
-AUTH_TYPE = AUTH_REMOTE_USER
+AUTH_TYPE = AUTH_DB
 
 # Uncomment to setup Full admin role name
 # AUTH_ROLE_ADMIN = 'Admin'
@@ -206,6 +206,8 @@ ALLOWED_EXTENSIONS = set(['csv'])
 CSV_EXPORT = {
     'encoding': 'utf-8-sig',
 }
+# 生成XLSX文件的临时目录
+XLSX_EXPORT_PATH = '/Users/Tony/Downloads/'
 
 # ---------------------------------------------------
 # Time grain configurations

@@ -60,13 +60,6 @@ from .base import (
 from .utils import bootstrap_user_data
 
 
-# SQL_LAB查询时中文报错
-# UnicodeEncodeError: ‘ascii’ codec can’t encode characters in position xxx ordinal not in range
-import sys
-
-reload(sys)
-sys.setdefaultencoding('utf-8')
-
 config = app.config
 stats_logger = config.get('STATS_LOGGER')
 log_this = models.Log.log_this
@@ -1076,7 +1069,7 @@ class Superset(BaseSupersetView):
             mimetype='application/json')
 
     def generate_json(self, datasource_type, datasource_id, form_data,
-                      csv=False, query=False, force=False):
+                      csv=False, xlsx=False, query=False, force=False):
         try:
             viz_obj = self.get_viz(
                 datasource_type=datasource_type,
@@ -1103,6 +1096,17 @@ class Superset(BaseSupersetView):
                 headers=generate_download_headers('csv'),
                 mimetype='application/csv')
 
+        if xlsx:
+            path, filename = viz_obj.get_xlsx()
+
+            f = open(path, 'rb')
+            response = CsvResponse(
+                response=f,
+                status=200,
+                headers=generate_download_headers(extension='xlsx', filename=filename),
+                mimetype='application/vnd.ms-excel')
+
+            return response
         if query:
             return self.get_query_string_response(viz_obj)
 
@@ -1174,6 +1178,7 @@ class Superset(BaseSupersetView):
     def explore_json(self, datasource_type=None, datasource_id=None):
         try:
             csv = request.args.get('csv') == 'true'
+            xlsx = request.args.get('xlsx') == 'true'
             query = request.args.get('query') == 'true'
             force = request.args.get('force') == 'true'
             form_data = self.get_form_data()[0]
@@ -1188,6 +1193,7 @@ class Superset(BaseSupersetView):
                                   datasource_id=datasource_id,
                                   form_data=form_data,
                                   csv=csv,
+                                  xlsx=xlsx,
                                   query=query,
                                   force=force)
 

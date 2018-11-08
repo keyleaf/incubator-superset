@@ -82,7 +82,7 @@ OBJECT_SPEC_PERMISSIONS = set([
 
 class SupersetSecurityManager(SecurityManager):
 
-    authremoteuserview=MyAuthRemoteUserView
+    # authremoteuserview=MyAuthRemoteUserView
 
     def get_schema_perm(self, database, schema):
         if schema:

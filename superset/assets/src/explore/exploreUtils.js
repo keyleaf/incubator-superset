@@ -22,7 +22,7 @@ export function getAnnotationJsonUrl(slice_id, form_data, isNative) {
 export function getURIDirectory(formData, endpointType = 'base') {
   // Building the directory part of the URI
   let directory = '/superset/explore/';
-  if (['json', 'csv', 'query'].indexOf(endpointType) >= 0) {
+  if (['json', 'csv', 'xlsx', 'query'].indexOf(endpointType) >= 0) {
     directory = '/superset/explore_json/';
   }
   return directory;
@@ -75,6 +75,9 @@ export function getExploreUrlAndPayload({
   if (endpointType === 'csv') {
     search.csv = 'true';
   }
+    if (endpointType === 'xlsx') {
+        search.xlsx = 'true';
+    }
   if (endpointType === 'standalone') {
     search.standalone = 'true';
   }
@@ -99,6 +102,7 @@ export function getExploreUrlAndPayload({
 }
 
 export function exportChart(formData, endpointType) {
+  debugger;
   const { url, payload } = getExploreUrlAndPayload({ formData, endpointType });
 
   const exploreForm = document.createElement('form');
