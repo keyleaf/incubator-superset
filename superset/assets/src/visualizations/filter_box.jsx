@@ -179,8 +179,10 @@ class FilterBox extends React.Component {
     // Add created options to filtersChoices, even though it doesn't exist,
     // or these options will exist in query sql but invisible to end user.
     Object.keys(selectedValues)
-      .filter(key => !selectedValues.hasOwnProperty(key)
-        || !(key in filtersChoices))
+      // .filter(key => !selectedValues.hasOwnProperty(key)
+      //   || !(key in filtersChoices))
+        // bug fix https://github.com/apache/incubator-superset/commit/af38d254f0022af6a0282d02e610d3721aff4007#diff-e449bcdafbcbc918ecea82486f9d4a2a
+      .filter(key => selectedValues.hasOwnProperty(key) && (key in filtersChoices))
       .forEach((key) => {
         const choices = filtersChoices[key];
         const choiceIds = new Set(choices.map(f => f.id));
@@ -200,7 +202,7 @@ class FilterBox extends React.Component {
       const data = filtersChoices[key];
       const max = Math.max(...data.map(d => d.metric));
       return (
-        <div key={key} className="m-b-5">
+        <div key={key} className="m-b-5 col-lg-6 col-xs-12">
           {label}
           <OnPasteSelect
             placeholder={t('Select [%s]', label)}
