@@ -207,7 +207,7 @@ CSV_EXPORT = {
     'encoding': 'utf-8-sig',
 }
 # 生成XLSX文件的临时目录
-XLSX_EXPORT_PATH = '/mnt/xvdb/venvs/venv-python3/xlsx_files'
+XLSX_EXPORT_PATH = '/mnt/xvdb/venvs/venv-python3/xlsx_files/'
 
 # ---------------------------------------------------
 # Time grain configurations
