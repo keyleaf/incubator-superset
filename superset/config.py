@@ -63,9 +63,9 @@ SECRET_KEY = '\2\1thisismyscretkey\1\2\e\y\y\h'  # noqa
 # SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(DATA_DIR, 'superset-mam.db')
 # SQLALCHEMY_DATABASE_URI = 'mysql://myapp@localhost/myapp'
 # test
-SQLALCHEMY_DATABASE_URI = 'mysql://operator:jndz2017@121.43.39.85:3306/superset'
+# SQLALCHEMY_DATABASE_URI = 'mysql://operator:jndz2017@121.43.39.85:3306/superset'
 # pro
-# SQLALCHEMY_DATABASE_URI = 'mysql://operator:jndz2017@10.81.180.119:3306/superset'
+SQLALCHEMY_DATABASE_URI = 'mysql://operator:jndz2017@10.81.180.119:3306/superset'
 # SQLALCHEMY_DATABASE_URI = 'postgresql://root:password@localhost/myapp'
 
 # In order to hook up a custom password store for all SQLACHEMY connections
@@ -103,7 +103,7 @@ ENABLE_PROXY_FIX = False
 APP_NAME = 'Superset'
 
 # Uncomment to setup an App icon
-APP_ICON = '/static/assets/images/superset-logo@2x.png'
+APP_ICON = '/static/assets/images/mam-logo@118.png'
 
 # Druid query timezone
 # tz.tzutc() : Using utc timezone
@@ -160,7 +160,7 @@ PUBLIC_ROLE_LIKE_GAMMA = True
 # Babel config for translations
 # ---------------------------------------------------
 # Setup default language
-BABEL_DEFAULT_LOCALE = 'en'
+BABEL_DEFAULT_LOCALE = 'zh'
 # Your application default translation path
 BABEL_DEFAULT_FOLDER = 'superset/translations'
 # The allowed translation for you app
